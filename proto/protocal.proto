@@ -1,0 +1,123 @@
+package XZProto;
+
+enum enum_cmd
+{
+    CMD_UNKNOWN = 0;
+    CMD_CAP = 1;
+    CMD_CHANGE_RUNNING_MODE = 2;
+    CMD_RECFG_CMD = 3;
+    CMD_TRIGGER_CMD =4;
+    CMD_EXIT = 100;
+ }
+
+enum enum_running_mode
+{
+    RUNNING_MODE_UNKNOWN=0;
+    RUNNING_MODE_ONLINE=1;
+    RUNNING_MODE_DEBUG=2;
+}
+//触发带上的信息
+message trigger_snapone_info
+{
+    optional uint32 uint32_group=1;  		//同组照片，属于一个液晶屏
+    optional uint32 uint32_seq=2;  		//seq 是偶数，正面相机拍照，奇数：反面相机拍照
+    optional uint32 uint32_id=3;   		//id 从左到右，0~3，4个液晶屏
+  
+}
+
+message change_running_mode
+{
+    optional uint32 uint32_input_src=1;
+    optional uint32 uint32_running_mode=2;  
+    optional uint32 uint32_auto_run=3;
+};
+
+message recfg_param
+{
+    optional uint32 uint32_camid=1;
+    optional uint32 uint32_exp=2;
+    optional uint32 uint32_gain=3;  
+    optional uint32 uint32_speed=4;
+    optional uint32 uint32_rgain=5;
+    optional uint32 uint32_ggain=6;
+    optional uint32 uint32_bgain=7;
+    optional uint32 uint32_set_if_trigger =8;
+    optional uint32 uint32_exp2=9;
+}
+
+message cam_ctrl_msg 
+{
+    optional uint32 uint32_cmd = 1; 		//命令号
+    optional uint32 uint32_need_img_process = 2;//需要图像处理
+    optional uint32 uint32_need_storage = 3; 	//需要图像存储
+    optional uint32 uint32_need_display = 4; 	//需要图像显示
+    optional uint32 uint32_seq = 5; 		//同步序列号
+    optional uint64 uint64_sync_time = 6; 	//同步时间 
+    optional uint64 uint64_trigger_time = 7; 	//触发时间
+    optional uint64 uint64_frame_time = 8;	//照片的实际时间
+    optional uint32 uint32_group = 9;		//组
+
+    optional uint32 uint32_trigger_mode = 10;	//触发模式，对应于CMD_CAP命令，如果是真，那么只拍一张照片，否则，将连续拍照
+    optional uint32 uint32_pysic_camid = 11;
+    optional uint32 uint32_running_mode = 12;   //工作模式
+    optional uint32 uint32_need_feed_back = 13; //工作模式
+    optional uint32 uint32_product_id = 14;   	//产品的ID
+    optional uint32 uint32_reprocess = 15;   	//重新处理，调试用
+    optional change_running_mode 	msg_change_running_mode=20;
+    repeated recfg_param 	  	rpt_msg_recfg_param=21;
+    optional uint32 uint32_inner_camid = 22;
+    optional string str_serial = 23;
+    optional uint32 uint32_pos = 24;		//第几个
+
+    optional string debug_file_name1 = 32; 	//文件输入时的文件名称 
+    optional string debug_file_name2 = 33; 	//
+    optional string debug_file_name3 = 34;	//
+    optional string debug_file_name4 = 35; 	//
+}
+
+enum enum_value_type
+{
+    VALUE_TYPE_UNKNOWN = 0;
+    VALUE_TYPE_INT = 1;
+    VALUE_TYPE_FLOAT = 2;
+    VALUE_TYPE_STRING = 3;
+    VALUE_TYPE_LIST = 4;  			//列表形式的值
+    VALUE_TYPE_BOOL = 5; 			//bool形式，用checkbox，使用uint32_value
+
+ }
+
+message value_item
+{
+    optional string str_name=1; 		//展示给客户的名字
+    optional uint32 uint32_idx=2; 		//配置的编号
+    optional uint32 uint32_type=3 [default = 3];//类型(string)
+    optional string str_value=4; 		//字符串形式的值
+    optional uint32 uint32_value=5; 		//整数形式的值,或bool形式
+    optional double double_value=6; 		//浮点数形式的值
+    repeated string rpt_str_value=7; 		//列表形式的值
+    optional uint32 uint32_invisibale=8; 	//是否隐藏显示，默认0，即显示
+}
+
+message tree_item
+{
+   //递归目录和配置
+    optional string str_name=1;
+    optional uint32 uint32_bchecked=2;
+    repeated value_item rpt_msg_value_item=3;
+    repeated tree_item rpt_msg_tree_item=4;
+}
+
+message tree_cfg 
+{
+    repeated tree_item  rpt_msg_tree_item=1; 	//顶层tree目录
+}
+
+//加密狗
+message enc_msg
+{
+    optional uint32 uint32_year=1;
+    optional bytes  bytes_randon=2;
+    optional uint32 uint32_month=3;  
+    optional uint32 uint32_day=4;
+    optional bytes  bytes_serial=5;
+};

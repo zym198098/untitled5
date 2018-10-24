@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="gb2312" ?>
+<root>
+<cameras>
+	<entry id="0"   序列号="22112330"/>
+</cameras>
+<coms>
+	<entry id="0"   序列号="com1"/>
+	<entry id="1"   序列号="com2"/>
+</coms>
+<spectrums>
+	<entry id="0"   序列号="USB2+U08127"/>
+	<entry id="1"   序列号="USB2+U08126"/>
+</spectrums>
+</root>
+
+
